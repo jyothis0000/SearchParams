@@ -3,14 +3,13 @@ import axios from "axios";
 import debounce from "lodash/debounce";
 
 const App = () => {
-  const [query, setQuery] = useState(""); // For the search input
-  const [results, setResults] = useState([]); // To store API results
-  const [isLoading, setIsLoading] = useState(false); // To manage loading state
+  const [query, setQuery] = useState("");
+  const [results, setResults] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Fetch data from the API
   const fetchMeals = async (searchTerm) => {
     if (!searchTerm) {
-      setResults([]); // Clear results if search term is empty
+      setResults([]);
       return;
     }
     try {
@@ -18,7 +17,7 @@ const App = () => {
       const response = await axios.get(
         `https://www.themealdb.com/api/json/v1/1/search.php?s=${searchTerm}`
       );
-      setResults(response.data.meals || []); // Update results or set empty array if no results
+      setResults(response.data.meals || []);
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
@@ -26,14 +25,12 @@ const App = () => {
     }
   };
 
-  // Debounced version of fetchMeals
   const debouncedFetchMeals = debounce(fetchMeals, 500);
 
-  // Handle input changes
   const handleInputChange = (e) => {
     const value = e.target.value;
     setQuery(value);
-    debouncedFetchMeals(value); // Trigger API call after debounce
+    debouncedFetchMeals(value);
   };
 
   return (
